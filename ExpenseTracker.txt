@@ -1,0 +1,77 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ExpenseTracker extends JFrame implements ActionListener {
+
+    private JTextField amountField, descriptionField, categoryField;
+    private JTextArea expenseArea;
+    private double totalExpense;
+
+    public ExpenseTracker() {
+        totalExpense = 0;
+
+        JLabel amountLabel = new JLabel("Amount:");
+        amountField = new JTextField(10);
+
+        JLabel descriptionLabel = new JLabel("Description:");
+        descriptionField = new JTextField(10);
+
+        JLabel categoryLabel = new JLabel("Category:");
+        categoryField = new JTextField(10);
+
+        JButton addButton = new JButton("Add Expense");
+        addButton.addActionListener(this);
+
+        expenseArea = new JTextArea(10, 40);
+        expenseArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(expenseArea);
+
+        JPanel panel = new JPanel();
+        panel.add(amountLabel);
+        panel.add(amountField);
+        panel.add(descriptionLabel);
+        panel.add(descriptionField);
+        panel.add(categoryLabel);
+        panel.add(categoryField);
+        panel.add(addButton);
+        panel.add(scrollPane);
+
+        add(panel);
+
+        setTitle("Expense Tracker");
+        setSize(500, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Add Expense")) {
+            try {
+                double newExpense = Double.parseDouble(amountField.getText());
+                String description = descriptionField.getText();
+                String category = categoryField.getText();
+
+                totalExpense += newExpense;
+                expenseArea.append("Amount: " + String.format("%.2f%n", newExpense));
+                expenseArea.append("Description: " + description + "\n");
+                expenseArea.append("Category: " + category + "\n");
+                expenseArea.append("-------------------\n");
+                expenseArea.append("Total Expense: " + String.format("%.2f%n", totalExpense));
+                expenseArea.append("\n");
+
+                // Clear input fields
+                amountField.setText("");
+                descriptionField.setText("");
+                categoryField.setText("");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number for the expense.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new ExpenseTracker();
+    }
+}
